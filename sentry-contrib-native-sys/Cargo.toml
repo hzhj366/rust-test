@@ -1,0 +1,36 @@
+[package]
+name = "sentry-contrib-native-sys"
+version = "0.3.1"
+authors = ["daxpedda <daxpedda@gmail.com>"]
+edition = "2018"
+links = "sentry-native"
+description = "Unofficial FFI bindings to the Sentry Native SDK for Rust."
+readme = "README.md"
+repository = "https://github.com/daxpedda/sentry-contrib-native"
+license = "MIT OR Apache-2.0"
+keywords = ["sentry", "crash", "crashpad", "breakpad", "minidump"]
+categories = ["external-ffi-bindings", "development-tools::debugging"]
+exclude = [
+  # exclude test data, as it's unnecessary and can break during unpacking on windows depending on how long the user's path is
+  "sentry-native/external/breakpad/src/client/mac/handler/testcases/testdata",
+  "sentry-native/external/breakpad/src/common/testdata",
+  "sentry-native/external/breakpad/src/processor/testdata",
+  "sentry-native/external/breakpad/src/tools/solaris/dump_syms/testdata",
+  "sentry-native/external/breakpad/src/tools/windows/dump_syms/testdata",
+  "sentry-native/external/crashpad/util/net/testdata",
+]
+
+[build-dependencies]
+anyhow = "1"
+cmake = "0.1"
+
+[features]
+default = ["transport-default"]
+backend-crashpad = []
+backend-breakpad = []
+backend-inproc = []
+transport-default = []
+
+[package.metadata.docs.rs]
+no-default-features = true
+targets = ["x86_64-unknown-linux-gnu"]

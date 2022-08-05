@@ -1,0 +1,90 @@
+[package]
+name = "sentry-contrib-native"
+version = "0.3.1"
+authors = ["daxpedda <daxpedda@gmail.com>"]
+edition = "2018"
+description = "Unofficial bindings to the Sentry Native SDK for Rust."
+readme = "README.md"
+repository = "https://github.com/daxpedda/sentry-contrib-native"
+license = "MIT OR Apache-2.0"
+keywords = ["sentry", "crash", "crashpad", "breakpad", "minidump"]
+categories = ["api-bindings", "development-tools::debugging"]
+exclude = [".github", ".gitmodules"]
+resolver = "2"
+
+[workspace]
+members = ["sentry-contrib-native-sys", "tests/res/dylib"]
+
+[dependencies]
+http = { version = "0.2", optional = true }
+once_cell = "1"
+rmpv = "1"
+sys = { package = "sentry-contrib-native-sys", version = "0.3.1", path = "sentry-contrib-native-sys", default-features = false }
+thiserror = "1"
+url = { version = "2", optional = true }
+vsprintf = "2"
+
+[dev-dependencies]
+anyhow = "1"
+dylib = { path = "tests/res/dylib" }
+hex = "0.4"
+futures-executor = "0.3"
+futures-util = "0.3"
+libloading = "0.7"
+parking_lot = "0.12"
+rand = "0.8"
+reqwest = { version = "0.11", default-features = false, features = [
+  "blocking",
+  "brotli",
+  "json",
+  "rustls-tls"
+] }
+rusty-fork = { git = "https://github.com/daxpedda/rusty-fork", branch = "proc-macro-feature", features = [
+  "macro"
+] }
+sentry-contrib-native = { path = ".", default-features = false, features = [
+  "test"
+] }
+serde = "1"
+serde_derive = "1"
+serde_json = "1"
+sha-1 = "0.10"
+tokio = { version = "1", features = [
+  "io-util",
+  "macros",
+  "process",
+  "rt-multi-thread",
+  "sync",
+  "time"
+] }
+url = "2"
+
+[features]
+default = ["transport-default"]
+backend-crashpad = ["sys/backend-crashpad"]
+backend-breakpad = ["sys/backend-breakpad"]
+backend-inproc = ["sys/backend-inproc"]
+transport-default = ["sys/transport-default"]
+transport-custom = ["http", "url"]
+test = []
+
+[[example]]
+name = "custom-transport"
+required-features = ["transport-custom"]
+
+[[example]]
+name = "crash"
+path = "tests/res/crash.rs"
+
+[[example]]
+name = "crash_failure"
+path = "tests/res/crash_failure.rs"
+
+[[example]]
+name = "panic"
+path = "tests/res/panic.rs"
+
+[package.metadata.docs.rs]
+features = ["transport-custom"]
+no-default-features = true
+targets = ["x86_64-unknown-linux-gnu"]
